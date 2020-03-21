@@ -19,7 +19,7 @@ You should see something like this:
 ```
 go run main.go join --bind-ip=x.x.x.x --http-port=8888 --cluster-key={CLUSTER_KEY} --known-ip=y.y.y.y
 ```
-Both `--bind-ip` and `--http-port` flags are similar to the **init** command. `{CLUSTER_KEY}` is the key you recieve on the first node. `--known-ip` is your gateway to the cluster; It can be any live node.
+Both `--bind-ip` and `--http-port` flags are similar to the **init** command. `{CLUSTER_KEY}` is the key you receive on the first node. `--known-ip` is your gateway to the cluster; It can be any live node.
 
 You should see something like this:
 
