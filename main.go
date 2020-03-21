@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/hashicorp/memberlist"
 	"log"
 	"net"
 	"net/http"
@@ -14,6 +13,8 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/hashicorp/memberlist"
 )
 
 type (
