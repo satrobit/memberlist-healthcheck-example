@@ -1,6 +1,7 @@
 # memberlist-healthcheck-example
 
-This repository contains a sample code for the [hashicorp/memberlist](https://github.com/hashicorp/memberlist)
+This repository is made for an article called [Introduction to gossip/epidemic protocol and memberlist](https://medium.com/@satrobit/introduction-to-gossip-epidemic-protocol-and-memberlist-5424352cdce0) and It uses [hashicorp/memberlist](https://github.com/hashicorp/memberlist) for membership management.
+
 # Usage
 ## Initiate a cluster on the first node
 ```
