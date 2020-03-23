@@ -38,7 +38,6 @@ func initCluster(bindIP, httpPort string) {
 
 	config := memberlist.DefaultLocalConfig()
 	config.BindAddr = bindIP
-	config.Name = bindIP
 	config.SecretKey = clusterKey
 
 	ml, err := memberlist.Create(config)
@@ -76,7 +75,6 @@ func initCluster(bindIP, httpPort string) {
 func joinCluster(bindIP, httpPort, clusterKey, knownIP string) {
 	config := memberlist.DefaultLocalConfig()
 	config.BindAddr = bindIP
-	config.Name = bindIP
 	config.SecretKey, _ = base64.StdEncoding.DecodeString(clusterKey)
 
 	ml, err := memberlist.Create(config)
