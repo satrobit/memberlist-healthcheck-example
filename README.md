@@ -38,3 +38,6 @@ You should see a json response like this:
 ```
 [{"ip":"127.0.0.1:80","status":"UP"},{"ip":"192.168.21.101:80","status":"UP"}]
 ```
+## License
+
+MIT © [Amir Keshavarz](https://github.com/satrobit)
