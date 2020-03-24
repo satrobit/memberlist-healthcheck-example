@@ -20,6 +20,7 @@ import (
 type (
 	Node struct {
 		memberlist *memberlist.Memberlist
+		healthPort string
 	}
 )
 
@@ -28,7 +29,7 @@ type Item struct {
 	Status string `json:"status"`
 }
 
-func initCluster(bindIP, httpPort string) {
+func initCluster(bindIP, httpPort, healthPort string) {
 
 	clusterKey := make([]byte, 32)
 	_, err := rand.Read(clusterKey)
@@ -48,6 +49,7 @@ func initCluster(bindIP, httpPort string) {
 
 	node := Node{
 		memberlist: ml,
+		healthPort: healthPort,
 	}
 
 	log.Printf("new cluster created. key: %s\n", base64.StdEncoding.EncodeToString(clusterKey))
@@ -72,7 +74,7 @@ func initCluster(bindIP, httpPort string) {
 	}
 }
 
-func joinCluster(bindIP, httpPort, clusterKey, knownIP string) {
+func joinCluster(bindIP, httpPort, clusterKey, knownIP, healthPort string) {
 	config := memberlist.DefaultLocalConfig()
 	config.BindAddr = bindIP
 	config.SecretKey, _ = base64.StdEncoding.DecodeString(clusterKey)
@@ -85,6 +87,7 @@ func joinCluster(bindIP, httpPort, clusterKey, knownIP string) {
 
 	node := Node{
 		memberlist: ml,
+		healthPort: healthPort,
 	}
 
 	_, err = ml.Join([]string{knownIP})
@@ -122,10 +125,12 @@ func main() {
 	joinKnownIP := joinCmd.String("known-ip", "", "known-ip")
 	joinBindIP := joinCmd.String("bind-ip", "127.0.0.1", "bind-ip")
 	joinHttpPort := joinCmd.String("http-port", "8888", "http-port")
+	joinHealthPort := joinCmd.String("health-port", "80", "health-port")
 
 	initCmd := flag.NewFlagSet("init", flag.ExitOnError)
 	initBindIP := initCmd.String("bind-ip", "127.0.0.1", "bind-ip")
 	initHttpPort := initCmd.String("http-port", "8888", "http-port")
+	initHealthPort := initCmd.String("health-port", "80", "health-port")
 
 	if len(os.Args) < 2 {
 		fmt.Println("expected 'join' or 'init' subcommands")
@@ -136,10 +141,10 @@ func main() {
 
 	case "join":
 		joinCmd.Parse(os.Args[2:])
-		joinCluster(*joinBindIP, *joinHttpPort, *joinClusterKey, *joinKnownIP)
+		joinCluster(*joinBindIP, *joinHttpPort, *joinClusterKey, *joinKnownIP, *joinHealthPort)
 	case "init":
 		initCmd.Parse(os.Args[2:])
-		initCluster(*initBindIP, *initHttpPort)
+		initCluster(*initBindIP, *initHttpPort, *initHealthPort)
 	default:
 		fmt.Println("expected 'join' or 'init' subcommands")
 		os.Exit(1)
@@ -155,7 +160,7 @@ func (n *Node) handler(w http.ResponseWriter, req *http.Request) {
 
 	for _, member := range n.memberlist.Members() {
 		hostName := member.Addr.String()
-		portNum := "80"
+		portNum := n.healthPort
 		seconds := 5
 		timeOut := time.Duration(seconds) * time.Second
 		conn, err := net.DialTimeout("tcp", hostName+":"+portNum, timeOut)
