@@ -163,7 +163,7 @@ func (n *Node) handler(w http.ResponseWriter, req *http.Request) {
 		portNum := n.healthPort
 		seconds := 5
 		timeOut := time.Duration(seconds) * time.Second
-		conn, err := net.DialTimeout("tcp", hostName+":"+portNum, timeOut)
+		_, err := net.DialTimeout("tcp", hostName+":"+portNum, timeOut)
 
 		if err != nil {
 			items = append(items, Item{Ip: hostName + ":" + portNum, Status: "DOWN"})
