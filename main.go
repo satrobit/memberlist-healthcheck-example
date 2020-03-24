@@ -161,9 +161,9 @@ func (n *Node) handler(w http.ResponseWriter, req *http.Request) {
 		conn, err := net.DialTimeout("tcp", hostName+":"+portNum, timeOut)
 
 		if err != nil {
-			items = append(items, Item{Ip: conn.RemoteAddr().String(), Status: "DOWN"})
+			items = append(items, Item{Ip: hostName + ":" + portNum, Status: "DOWN"})
 		} else {
-			items = append(items, Item{Ip: conn.RemoteAddr().String(), Status: "UP"})
+			items = append(items, Item{Ip: hostName + ":" + portNum, Status: "UP"})
 		}
 	}
 
